@@ -14,6 +14,8 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private TextView helloTv;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         bounce.setStartDelay(1000);
         bounce.playSequentially(down, up);
 
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
                 bounce.start();
@@ -44,5 +46,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         handler.post(runnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null != handler) {
+            handler.removeCallbacks(runnable);
+        }
     }
 }
